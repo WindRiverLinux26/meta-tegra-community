@@ -1,0 +1,52 @@
+From f6cf071db0fba8c5ab6b5f1ab5ffad7126843e8a Mon Sep 17 00:00:00 2001
+From: Meng Li <Meng.Li@windriver.com>
+Date: Mon, 16 Mar 2026 18:04:17 +0800
+Subject: [PATCH] Fix Python 3.14 multiprocessing compatibility
+
+When running jtop command on NIVIDA Orin platform, there is below issue:
+jtop
+The jtop.service is not active. Please run:
+systemctl restart jtop.service
+
+In Python 3.14+, the default multiprocessing start method is forkserver,
+which needs to start a fresh Python process and send data to it via
+pickling. But JtopServer uses JtopManager.register() with parameter
+callable=lambda:xxx, which can't be pickled, and then cause issue.
+The key difference is that lambdas are anonymous, they have no name in
+the module's namespace. That's why Python's pickle module can't
+serialize lambdas. pickle stores functions by their module path and
+name, but a lambda has no such reference to look up. Therefore, force
+fork method for multiprocessing to avoid pickle errors with lambda
+functions in Python 3.14+ which uses forkserver by default.
+
+Upstream-Status: Pending
+
+Signed-off-by: Meng Li <Meng.Li@windriver.com>
+---
+ jtop/service.py | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/jtop/service.py b/jtop/service.py
+index 02b9d9d..96a36e5 100644
+--- a/jtop/service.py
++++ b/jtop/service.py
+@@ -25,6 +25,7 @@ import sys
+ import stat
+ import shlex
+ import subprocess as sp
++import multiprocessing
+ from copy import deepcopy
+ from grp import getgrnam
+ from shutil import copyfile, rmtree
+@@ -148,6 +149,8 @@ class JtopServer(Process):
+ 
+     def __init__(self, force=False):
+         self.force = force
++        # Force fork method for Python 3.14+ compatibility
++        multiprocessing.set_start_method('fork', force=True)
+         # Load configuration
+         self.config = Config()
+         # Save version jtop
+-- 
+2.34.1
+
