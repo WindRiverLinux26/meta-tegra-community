@@ -1,4 +1,4 @@
-DESCRIPTION = "Python bindings for Deepstream-7.0"
+DESCRIPTION = "Python bindings for Deepstream-7.1"
 HOMEPAGE = "https://github.com/NVIDIA-AI-IOT/deepstream_python_apps"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7a01a47514ea2d404b8db41b6cfe6db0"

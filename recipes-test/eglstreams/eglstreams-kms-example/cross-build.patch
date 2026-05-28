@@ -37,7 +37,7 @@ Index: git/Makefile
 +
 +install:
 +	install -d $(DESTDIR)$(bindir)
-+	install -m 0755 $(EGLSTREAMS_KSM_EXAMPLE) $(DESTDIR)$(bindir)/
++	install -m 0755 $(EGLSTREAMS_KMS_EXAMPLE) $(DESTDIR)$(bindir)/
  
  clean:
  	rm -f *.o $(EGLSTREAMS_KMS_EXAMPLE) *~
