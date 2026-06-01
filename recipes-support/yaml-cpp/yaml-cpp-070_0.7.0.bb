@@ -17,3 +17,12 @@ SRCREV = "0579ae3d976091d7d664aa9d2527e0d0cff25763"
 inherit cmake
 
 EXTRA_OECMAKE = "-DYAML_CPP_BUILD_TESTS=OFF -DBUILD_SHARED_LIBS=ON -DYAML_CPP_BUILD_TOOLS=OFF"
+
+PACKAGES = "${PN} ${PN}-dev ${PN}-dbg ${PN}-src"
+DEBIAN_NOAUTONAME:${PN} = "1"
+DEBIAN_NOAUTONAME:${PN}-dev = "1"
+DEBIAN_NOAUTONAME:${PN}-dbg = "1"
+DEBIAN_NOAUTONAME:${PN}-src = "1"
+FILES:${PN} = "${libdir}/libyaml-cpp.so.0.7*"
+FILES:${PN}-dev = "${includedir} ${libdir}/libyaml-cpp.so ${libdir}/cmake ${libdir}/pkgconfig ${datadir}/cmake ${datadir}/pkgconfig"
+FILES:${PN}-dbg = "${libdir}/.debug"
